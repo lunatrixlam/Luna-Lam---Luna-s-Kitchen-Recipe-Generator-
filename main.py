@@ -9,7 +9,7 @@ import requests
 # A dictionary to store saved recipes
 my_recipes = {}
 
-# A shopping list to store saved recipe ingredients
+# A list to store saved recipe ingredients
 my_shopping_list = []
 
 # The draw_border function creates a pretty border
@@ -183,7 +183,7 @@ def save_ingredients():
             in_list = False
 
             for item in my_shopping_list:
-                if item == recipe_title.strip():
+                if item == recipe_title:
                     in_list = True
             
             if in_list == True:
@@ -238,7 +238,7 @@ def display_shopping_list():
 
 # The start_kitchen function starts up the program and walks the user through the navigation options throughout the program.
 
-def start_kitchen():
+def main():
 
     welcome()
 
@@ -263,4 +263,6 @@ def start_kitchen():
             print("Sorry, that wasn't an option. Try again.")
             print()
 
-start_kitchen()
+# checks to see if name of file matches to main; if so then call the main() function. This allows other programs to import the other functions from this file for their program to use.
+if __name__ == "__main__":
+    main()
