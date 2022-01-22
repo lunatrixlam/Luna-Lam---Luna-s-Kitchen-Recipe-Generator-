@@ -12,18 +12,21 @@ my_recipes = {}
 # A list to store saved recipe ingredients
 my_shopping_list = []
 
-# The draw_border function creates a pretty border
 def draw_border():
+    """creates a pretty border"""
+
     print("-" * 45)
     print()
 
-# The welcome function greets the user
 def welcome():
+    """greets user"""
+
     print(("\U0001F319 " * 3) + " Welcome to Luna's Kitchen " + (" \U0001F319" * 3))   # \U000 allows for emoji printing via unicode
     draw_border() # creates a decorative border
 
-# The display_menu function displays the navigation options to the user
 def display_menu():
+    """displays navigation options to user"""
+
     print("Menu Options:")
     print("[V]iew Saved Recipes")
     print("[G]et a Recipe")
@@ -31,13 +34,28 @@ def display_menu():
     print("[Q]uit Kitchen")
     print()
 
-# The goodbye function wishes the user goodbye
+def select_menu():
+    """validates user input based on navigation options per display_menu()"""
+    
+    display_menu()
+
+    select_menu = input("Enter menu option: \n> ").lower().strip()
+    print()
+    
+    if select_menu == "v" or select_menu == "view" or select_menu == "g" or select_menu == "get" or select_menu == "d" or select_menu == "display" or select_menu == "q" or select_menu == "quit":
+        return select_menu
+    else:
+        print("Sorry, that wasn't an option. Try again.")
+        print()
+
 def say_goodbye():
+    """thanks and wishes the user goodbye"""
+
     print(("\U0001F319 ") + " Thanks for visiting Luna's Kitchen! Goodbye. " + (" \U0001F319"))
 
-# The get_recipe function  asks the user for input to generate a URL to allow the calling of requests, BeautifulSoup, and find methods to generate recipe title, summary, and link. 
-
 def get_recipe():
+    """asks user for input to generate a URL to allow the calling of requests and BeautifulSoup, and use .find() method to generate appropriate recipe title, summary, and URL link to recipe"""
+
     ingredient = input("Enter an ingredient or recipe: \n> ").lower()
 
     ingredients = ingredient.split()    # splits the string and stores the substring into a list
@@ -77,9 +95,8 @@ def get_recipe():
     print(f"Link: {recipe_link}")
     print()
 
-# The view_recipe function executes continuously until broken. It asks the user for input to determine if the recipe serving, ingredients, and instruction details should be printed.  
-
 def view_recipe():
+    """The view_recipe function executes continuously until broken. It asks the user for input to determine if the recipe serving, ingredients, and instruction details should be printed to the console."""
 
     while True: 
         view_recipe = input("Would you like to view the recipe? Enter yes or no: \n> ").lower().strip()
@@ -152,9 +169,8 @@ def view_recipe():
             print("Sorry, that wasn't an option. Try again.")
             print()
 
-# The my_saved_recipes function displays the saved recipes from the user's current session in Luna's Kitchen
-
 def my_saved_recipes():
+    """displays the saved recipes from the user's current session in Luna's Kitchen"""
 
     if my_recipes == {}:
         print("No recipes currently saved.")
@@ -167,15 +183,14 @@ def my_saved_recipes():
             count += 1    
     print()
 
-# The save_ingredients function adds the ingredients from the most recently viewed recipe to my_shopping_list and also checks to see if the same recipe's ingredients were previously already added
-
 def save_ingredients():
+    """adds the ingredients from the most recently viewed recipe to my_shopping_list and also checks to see if the same recipe's ingredients were previously already added"""
 
     while True:
 
         save_ingredient = input("Would you like to save the recipe ingredients to your shopping list? Enter yes or no: \n> ").lower().strip()
         print()
-
+    
         if save_ingredient == "n" or save_ingredient == "no":
             break
         elif save_ingredient == "y" or save_ingredient == "yes":
@@ -201,10 +216,8 @@ def save_ingredients():
             print("Sorry, that wasn't an option. Try again.")
             print()
 
-
-# The save_recipe function saves the most recently viewed recipe into my_recipes dictionary with the "recipe_title: recipe_link" as the "key: value" pair
-
 def save_recipe():
+    """saves the most recently viewed recipe into my_recipes dictionary with the "recipe_title: recipe_link" as the "key: value" pair"""
 
     while True:
         
@@ -225,9 +238,9 @@ def save_recipe():
             print("Sorry, that wasn't an option. Try again.")
             print()
 
-# The display_shopping_list function displays the current list items in my_shopping_list to the user 
-
 def display_shopping_list():
+    """displays the current list items in my_shopping_list to the user"""
+
     if my_shopping_list == []:
         print("No items in shopping list.")
     else:
@@ -236,32 +249,26 @@ def display_shopping_list():
             print(f"{item}")
     print()
 
-# The start_kitchen function starts up the program and walks the user through the navigation options throughout the program.
-
 def main():
+    """starts up the program and walks the user through the navigation options throughout the program."""
 
     welcome()
 
     while True:
-        display_menu()
 
-        select_menu = input("Enter menu option: \n> ").lower().strip()
-        print()
+        my_selection = select_menu()
 
-        if select_menu == "q" or select_menu == "quit":
+        if my_selection == "q" or my_selection == "quit":
             say_goodbye()
             break
-        elif select_menu == "v" or select_menu == "view":
+        elif my_selection == "v" or my_selection == "view":
             my_saved_recipes()
-        elif select_menu == "g" or select_menu == "get":
+        elif my_selection == "g" or my_selection == "get":
             get_recipe()
             view_recipe()
             save_recipe()
-        elif select_menu == "d" or select_menu == "display":
+        elif my_selection == "d" or my_selection == "display":
             display_shopping_list()
-        else:
-            print("Sorry, that wasn't an option. Try again.")
-            print()
 
 # checks to see if name of file matches to main; if so then call the main() function. This allows other programs to import the other functions from this file for their program to use.
 if __name__ == "__main__":
