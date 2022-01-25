@@ -146,8 +146,10 @@ def display_recipes():
         
         # draw a border to begin next display section
         draw_border()
+
         # get the total length of recipe_title() to determine max count for display
         total_recipe_count = len(recipe_title)
+
         # share display result to user
         print(f"Found: {total_recipe_count} Recipes") 
         print()
@@ -158,6 +160,7 @@ def display_recipes():
         # ask user for input for how many recipes to display in console
         display_count = int(input(f"How many recipes would you like to view? Enter a number, 0 to {total_recipe_count}. \n> "))
         print()
+        print()
 
         # if user indicates 0 recipes to display, exit
         if display_count == 0:
@@ -166,24 +169,23 @@ def display_recipes():
         elif display_count > 0 and display_count <= total_recipe_count:
             count = 1   # start Recipe # display at 1
 
-            print("Here are your results...")
-            print()
-            print()
             time.sleep(2)   # add some suspense 
 
             for i in range(display_count):
                 
-                draw_border()
                 print(f"Recipe #{count}: {recipe_title[i]}")
                 print()
                 print(f"Summary: {recipe_summary[i]}")
                 print()
                 print(f"Link: {recipe_link[i]}")
                 print()
+                # draw_border() to begin next section of display 
+                draw_border()
 
                 count += 1
             print()
 
+            # call view_recipe() function
             view_recipe()
 
             break
@@ -217,10 +219,11 @@ def find_recipe():
     """uses BeautifulSoup methods to find specific recipe page elements and displays recipe title, recipe servings, recipe ingredients, and recipe instructions to user; invokes the save_recipe() function if meets condition"""
 
     while True:
-
+        # ask user to confirm recipe number for look-up
         recipe_number = int(input(f"Please enter recipe number, between Recipe #1 to Recipe #{display_count}: \n> "))
         print()
         
+        # validate user input
         if recipe_number > 0 and recipe_number <= display_count:
 
             # create a get_recipe variable and call the requests.get() on recipe_link to initiate HTTP GET request
@@ -310,6 +313,7 @@ def find_recipe():
             save_recipe()
             break
         else:
+            # let user know that wasn't an option
             print("Sorry, that wasn't an option. Try again.")
             print()
 
@@ -321,15 +325,30 @@ def my_saved_recipes():
         print("No recipes currently saved.")
     # else: display recipes in my_recipes dictionary
     else:
+        # draw a border to begin next section of display
         draw_border()
+        # print My Recipes header to user
         print("\U0001F4D6 My Recipes:")
         
         # print count of each key: value pair and display key: value pair in own line
         count = 1
-        for key in my_recipes:
-            print(f"{count}: {key}, {my_recipes[key]}")
+        for recipe in my_recipes:
+            print(f"{count}: {recipe}, {my_recipes[recipe]}")
             count += 1    
     print()
+
+def write_shopping_list():
+    """writes items in my_shopping_list to myshoppinglist.txt file"""
+
+    # call the open method to create a txt file and use it for writing
+    outfile = open("myshoppinglist.txt", "w")
+    
+    # for each item in my_shopping list, write each item to the txt file
+    for item in my_shopping_list:
+        outfile.write(item + "\n")
+
+    # close the file
+    outfile.close()
 
 def save_ingredients():
     """adds the ingredients from the most recently viewed recipe to my_shopping_list and also checks to see if the same recipe's ingredients were previously already added"""
@@ -363,12 +382,29 @@ def save_ingredients():
                     my_shopping_list.append(ingredient)
                 my_shopping_list.append("")
                 print(f"\U0001F389 Success! {my_recipe_title.strip().upper()} recipe ingredients saved to shopping list.")
+
+            # call the write_shopping_list() function
+            write_shopping_list()
+
             break
         else:
             # let user know input was not an option
             print("Sorry, that wasn't an option. Try again.")
             print()
     print()
+
+def write_recipe():
+    """writes saved recipes from save_recipe() to myrecipes.txt file"""
+
+    # call the open method to create a file and use it for writing
+    outfile = open("myrecipes.txt", "w")
+    
+    # for each item in my_recipes, write each value/URL to the txt file
+    for recipe in my_recipes:
+        outfile.write(my_recipes[recipe] + "\n")
+
+    # close the file
+    outfile.close()
 
 def save_recipe():
     """saves the most recently viewed recipe into my_recipes dictionary with the "recipe_title: recipe_link" as the "key: value" pair"""
@@ -388,9 +424,14 @@ def save_recipe():
             my_recipes[my_recipe_title.strip()] = my_recipe_link.strip()
 
             print(f"\U0001F389 Success: {my_recipe_title.strip().upper()} saved to your recipes.")
-            print()        
+            print() 
 
+            # call the write_recipe() function
+            write_recipe()       
+
+            # call the save_ingredients() function
             save_ingredients()
+            
             break
         else:
             # let user know input was not an option
@@ -406,9 +447,13 @@ def display_shopping_list():
         print()
     # else, print each item in my_shopping_list on own line in console
     else:
+        # draw_border() to set-up next section of display
         draw_border()
+
+        # print My Shopping List header to user
         print("\U0001F4DD My Shopping List:")
         print()
+        # print each item in my_shopping_list
         for item in my_shopping_list:
             print(f"{item}")
 
