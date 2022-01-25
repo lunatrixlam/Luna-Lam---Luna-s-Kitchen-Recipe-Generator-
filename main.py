@@ -1,5 +1,5 @@
 """
-Luna's Kitchen is a recipe generator program that uses the requests and BeautifulSoup4 modules from bs4 to webscrape data from the web to populate a recipe title, recipe description summary, link to recipe URL, and recipe details including serving size, ingredients list, and instructions list. Users also have the ability to save the recipe and URL to a dictionary and save recipe ingredients to a shopping list.
+Luna's Kitchen is a recipe generator program that uses the requests and BeautifulSoup4 modules from bs4 to webscrape data from the web to populate a recipe title, recipe description summary, link to recipe URL, and recipe details including serving size, ingredients list, and instructions list. Users also have the ability to save the recipe and URL to a dictionary and save recipe ingredients to a list; any saved results are written to a txt file.
 """
 from bs4 import BeautifulSoup
 
@@ -208,7 +208,10 @@ def view_recipe():
             break
         # elif user says "yes" to viewing recipe:
         elif view_recipe == "y" or view_recipe == "yes":
+
+            # call find_recipe() function
             find_recipe()
+
             break
         else:
             # let user know input was not an option
@@ -226,27 +229,31 @@ def find_recipe():
         # validate user input
         if recipe_number > 0 and recipe_number <= display_count:
 
-            # create a get_recipe variable and call the requests.get() on recipe_link to initiate HTTP GET request
+            # create a get_recipe variable 
             global my_recipe_link
 
+            # recipe_link index begin at 0, so need to -1 from input
             my_recipe_link = recipe_link[recipe_number-1]
 
+            # call the requests.get() on recipe_link to initiate HTTP GET request
             get_recipe = requests.get(my_recipe_link)
 
             # create a recipe_doc variable and call the BeautifulSoup function on the get_recipe variable to parse the HTML elements of the page 
             recipe_doc = BeautifulSoup(get_recipe.text, "html.parser")
 
+            # create a global my_recipe_title variable
             global my_recipe_title
-
+            
+            # use .find() method to locate the recipe title info of the recipe by analyzing tag and attribute elements. Store the result into my_recipe_title
             my_recipe_title = recipe_doc.find("h1", class_="headline heading-content elementFont__display").text
 
-            # create a recipe_servings variable and use .find method to locate the servings info of the recipe by analyzing tag and attribute lemeents. Store the result into recipe_servings
+            # create a recipe_servings variable and use .find() method to locate the servings info of the recipe by analyzing tag and attribute elements. Store the result into recipe_servings
             recipe_servings = recipe_doc.find("div", class_="recipe-adjust-servings__original-serving").string
 
             # set a global recipe_ingredients variable that other functions can call within their local scope
             global my_recipe_ingredients
 
-            # create a recipe_ingredients variable and use .find method to locate the ingredients info of the recipe by analyzing tag and attribute lemeents. Store the result into ingredients
+            # create a recipe_ingredients variable and use .find() method to locate the ingredients info of the recipe by analyzing tag and attribute elements. Store the result into ingredients
             my_recipe_ingredients = recipe_doc.find("fieldset", class_="ingredients-section__fieldset").text
 
             # ln 84 to 92 cleans up the output by removing unnecessary whitespace from raw website output
@@ -261,7 +268,7 @@ def find_recipe():
             
             my_recipe_ingredients = update_ingredients
 
-            # create an instructions variable and use .find method to locate the instructions info of the recipe by analyzing tag and attribute lemeents. Store the result into instructions
+            # create an instructions variable and use .find() method to locate the instructions info of the recipe by analyzing tag and attribute elements. Store the result into instructions
             instructions = recipe_doc.find("fieldset", class_="instructions-section__fieldset").text
 
             # ln 102 to 117 cleans up the output by removing unnecessary whitespace from raw website output
@@ -399,9 +406,9 @@ def write_recipe():
     # call the open method to create a file and use it for writing
     outfile = open("myrecipes.txt", "w")
     
-    # for each item in my_recipes, write each value/URL to the txt file
+    # for each key in my_recipes, write each key, key[value] to the txt file
     for recipe in my_recipes:
-        outfile.write(my_recipes[recipe] + "\n")
+        outfile.write(f"{recipe}, {my_recipes[recipe]} \n")
 
     # close the file
     outfile.close()
@@ -466,18 +473,18 @@ def main():
     # create an endless loop asking the following until the user quits the program; use while True:
     while True:
 
-        # call the select_menu() function to display menu options and ask user for menu selection input; return function results into my_selection
-        my_selection = select_menu() # sets my_selection variable to whatever was stored in return value when select_menu() function was called
+        # call the select_menu() function to display menu options and ask user for menu selection input; return function results into my_select_menu variable
+        my_select_menu = select_menu() # sets my_selection variable to whatever was stored in return value when select_menu() function was called
 
-        if my_selection == "q" or my_selection == "quit":
+        if my_select_menu == "q" or my_select_menu == "quit":
             say_goodbye()
             break
-        elif my_selection == "v" or my_selection == "view":
+        elif my_select_menu == "v" or my_select_menu == "view":
             my_saved_recipes()
-        elif my_selection == "g" or my_selection == "get":
+        elif my_select_menu == "g" or my_select_menu == "get":
             find_all_recipes()
             display_recipes()
-        elif my_selection == "d" or my_selection == "display":
+        elif my_select_menu == "d" or my_select_menu == "display":
             display_shopping_list()
 
 # checks to see if name of file matches to main; if so then call the main() function. This allows other programs to import the other functions of this file for their program to use.
