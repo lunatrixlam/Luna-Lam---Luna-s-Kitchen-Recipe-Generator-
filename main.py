@@ -37,12 +37,15 @@ def display_menu():
 
 def select_menu():
     """validates user input based on navigation options per display_menu()"""
-    
+
+    # call display_menu() function to display navigation options to user    
     display_menu()
 
+    # prompt user for menu selection and store input into variable
     select_menu = input("Enter menu option: \n> ").lower().strip()
     print()
     
+    # validate input
     if select_menu == "v" or select_menu == "view" or select_menu == "g" or select_menu == "get" or select_menu == "d" or select_menu == "display" or select_menu == "q" or select_menu == "quit":
         return select_menu
     else:
@@ -199,7 +202,7 @@ def view_recipe():
     # create an endless loop asking the following until the user quits the program; use while True
     while True: 
         # ask user if they would like to view recipe details
-        view_recipe = input("Would you to view a specific recipe? Enter yes or no: \n> ").lower().strip()
+        view_recipe = input("Would you like to view a specific recipe? Enter yes or no: \n> ").lower().strip()
         print()
         
         # if user says "no" to viewing recipe:
@@ -318,6 +321,7 @@ def find_recipe():
 
             # call save_recipe() function
             save_recipe()
+            
             break
         else:
             # let user know that wasn't an option
@@ -428,18 +432,31 @@ def save_recipe():
             break
         # elif - store recipe_title: recipe_link in my_recipes dictionary
         elif save_recipe == "y" or save_recipe == "yes":
-            my_recipes[my_recipe_title.strip()] = my_recipe_link.strip()
+            # check to see if recipe already saved in my_recipes    
+            found = False
 
-            print(f"\U0001F389 Success: {my_recipe_title.strip().upper()} saved to your recipes.")
-            print() 
-
-            # call the write_recipe() function
-            write_recipe()       
-
-            # call the save_ingredients() function
-            save_ingredients()
+            if my_recipe_title in my_recipes:
+                found = True
             
-            break
+            if found == True:
+                print(f"\U0001F389 {my_recipe_title.strip().upper()} already saved to your recipes.")
+                print()
+                break
+            
+            # if recipe not already saved, save recipe to my_recipe
+            if found == False:
+                my_recipes[my_recipe_title.strip()] = my_recipe_link.strip()
+
+                print(f"\U0001F389 Success: {my_recipe_title.strip().upper()} saved to your recipes.")
+                print() 
+
+                # call the write_recipe() function
+                write_recipe()       
+
+                # call the save_ingredients() function
+                save_ingredients()
+                
+                break
         else:
             # let user know input was not an option
             print("Sorry, that wasn't an option. Try again.")
